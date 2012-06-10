@@ -1495,7 +1495,7 @@ module SysaidApiServiceServiceMappingRegistry
 
   LiteralRegistry.register(
     :class => ApiServiceRequest::CustomFields,
-    :schema_name => XSD::QName.new(nil, "customFields"),
+    :schema_name => XSD::QName.new("http://www.w3.org/2001/XMLSchema", "customFields"),
     :is_anonymous => true,
     :schema_qualified => false,
     :schema_element => [
