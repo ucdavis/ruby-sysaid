@@ -31,8 +31,14 @@ class SysAid
     conditions = Hash[attrs_with_args]
 
     sr = ApiServiceRequest.new
-    result = @service.executeSelectQuery({:sessionId => @session_id, :apiSysObj => sr, :condition => "#{conditions.keys[0]} = '#{conditions.values[0]}'"})
-    puts result
+    if conditions.keys[0] == "id"
+      # ID requires we use loadById, not executeSelectQuery
+      result = @service.loadByStringId({:sessionId => @session_id, :apiSysObj => sr, :id => conditions.values[0]})
+    else
+      result = @service.executeSelectQuery({:sessionId => @session_id, :apiSysObj => sr, :condition => "#{conditions.keys[0]} = '#{conditions.values[0]}'"})
+    end
+    
+    SysAid::Ticket.new(result.v_return)
   end
   
   def respond_to?(meth)
