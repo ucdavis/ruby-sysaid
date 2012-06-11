@@ -6,12 +6,16 @@ for dealing with SysAid objects.
 
 Usage
 =====
-service = SysAid.new("account", "username", "password")
-ticket = service.find_by_id(45)
-ticket = service.find_by_responsibility("somebody")
-ticket.title = "Updated"
-ticket.save
-ticket.delete
+    # Required
+    service = SysAid.new("account", "username", "password")
+    # find_by_* any field valid for SysAid
+    ticket = service.find_by_id(45)
+    ticket = service.find_by_responsibility("somebody")
+    # Example of modifying a ticket
+    ticket.title = "Updated"
+    ticket.save
+    # Deleting a ticket
+    ticket.delete
 
 Additional
 ==========
