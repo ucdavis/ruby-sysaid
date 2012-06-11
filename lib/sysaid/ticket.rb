@@ -1,0 +1,3 @@
+class SysAid::Ticket
+  
+end
