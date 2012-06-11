@@ -1,4 +1,4 @@
-load 'SysaidApiServiceService.rb'
+load 'sysaid/driver/SysaidApiServiceService.rb'
 require 'soap/mapping'
 
 module SysaidApiServiceServiceMappingRegistry

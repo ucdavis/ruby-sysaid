@@ -4,4 +4,5 @@ class SysAid
   end
 end
 
-require 'sysaid/SysaidApiServiceServiceDriver'
+require 'sysaid/driver/SysaidApiServiceServiceDriver'
+require 'sysaid/ticket'

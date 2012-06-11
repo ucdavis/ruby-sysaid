@@ -1,5 +1,5 @@
-load 'SysaidApiServiceService.rb'
-load 'SysaidApiServiceServiceMappingRegistry.rb'
+load 'sysaid/driver/SysaidApiServiceService.rb'
+load 'sysaid/driver/SysaidApiServiceServiceMappingRegistry.rb'
 require 'soap/rpc/driver'
 
 class SysaidApiService < ::SOAP::RPC::Driver
