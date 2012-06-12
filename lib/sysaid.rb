@@ -2,14 +2,6 @@ class SysAid
   @@logged_in = false
   @@server_settings = {}
   
-  #def initialize(account, username, password)
-    #@account = account
-    #@username = username
-    #@password = password
-    
-    #login
-    #end
-  
   # Implements find_by_* methods, e.g. find_by_id, find_by_responsibility, etc.
   def self.method_missing(meth, *args, &block)
     if meth.to_s =~ /^find_by_(.+)$/
@@ -20,17 +12,9 @@ class SysAid
   end
 
   def self.run_find_by_method(attrs, *args, &block)
-    # Make an array of attribute names
+    # Make a key/value hash of attributes
     attrs = attrs.split('_and_')
-
-    # #transpose will zip the two arrays together like so:
-    #   [[:a, :b, :c], [1, 2, 3]].transpose
-    #   # => [[:a, 1], [:b, 2], [:c, 3]]
     attrs_with_args = [attrs, args].transpose
-
-    # Hash[] will take the passed associative array and turn it
-    # into a hash like so:
-    #   Hash[[[:a, 2], [:b, 4]]] # => { :a => 2, :b => 4 }
     conditions = Hash[attrs_with_args]
     
     if self.logged_in? == false
@@ -90,7 +74,9 @@ class SysAid
     @@service = SysaidApiService.new(@@server_settings[:endpoint])
 
     # see SOAP wiredumps (for debugging)
-    @@service.wiredump_dev = STDERR
+    unless @@server_settings[:debug].nil?
+      @@service.wiredump_dev = @@server_settings[:debug]
+    end
 
     # login
     unless @@server_settings[:account].nil?

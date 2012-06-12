@@ -24,6 +24,9 @@ Usage
 
 Additional
 ==========
+If you'd like to debug the SOAP messages being sent back and forth, add
+this (optional) setting: SysAid.server_settings[:debug] = STDERR.
+
 Please file any bugs at https://github.com/cthielen/ruby-sysaid/issues.
 
 Written by Christopher Thielen for the University of California Davis.
