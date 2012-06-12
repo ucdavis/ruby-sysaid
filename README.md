@@ -7,7 +7,12 @@ for dealing with SysAid objects.
 Usage
 =====
     # Required
-    service = SysAid.new("account", "username", "password")
+    SysAid.server_settings = {
+      :endpoint => "sysaid.server.com",
+      :account => "account",
+      :username => "username",
+      :password => "password"
+    }
     # find_by_* any field valid for SysAid
     ticket = service.find_by_id(45)
     ticket = service.find_by_responsibility("somebody")
@@ -26,4 +31,4 @@ Written by Christopher Thielen for the University of California Davis.
 Available under the MIT license.
 
 Version 0.1
-Last updated: Monday, June 11, 2012
+Last updated: Tuesday, June 12, 2012

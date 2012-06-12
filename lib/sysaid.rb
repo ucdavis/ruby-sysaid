@@ -1,16 +1,17 @@
 class SysAid
   @@logged_in = false
+  @@server_settings = {}
   
-  def initialize(account, username, password)
-    @account = account
-    @username = username
-    @password = password
+  #def initialize(account, username, password)
+    #@account = account
+    #@username = username
+    #@password = password
     
-    login
-  end
+    #login
+    #end
   
   # Implements find_by_* methods, e.g. find_by_id, find_by_responsibility, etc.
-  def method_missing(meth, *args, &block)
+  def self.method_missing(meth, *args, &block)
     if meth.to_s =~ /^find_by_(.+)$/
       run_find_by_method($1, *args, &block)
     else
@@ -18,7 +19,7 @@ class SysAid
     end
   end
 
-  def run_find_by_method(attrs, *args, &block)
+  def self.run_find_by_method(attrs, *args, &block)
     # Make an array of attribute names
     attrs = attrs.split('_and_')
 
@@ -31,6 +32,10 @@ class SysAid
     # into a hash like so:
     #   Hash[[[:a, 2], [:b, 4]]] # => { :a => 2, :b => 4 }
     conditions = Hash[attrs_with_args]
+    
+    if self.logged_in? == false
+      self.login
+    end
 
     sr = ApiServiceRequest.new
     if conditions.keys[0] == "id"
@@ -43,7 +48,7 @@ class SysAid
     SysAid::Ticket.new(result.v_return)
   end
   
-  def respond_to?(meth)
+  def self.respond_to?(meth)
     if meth.to_s =~ /^find_by_.*$/
       true
     else
@@ -59,7 +64,12 @@ class SysAid
     @@session_id
   end
   
+  # Note: By design, logged_in? will try to log in if it isn't already
   def self.logged_in?
+    if @@logged_in == false
+      login
+    end
+    
     if @@logged_in
       return true
     else
@@ -67,18 +77,28 @@ class SysAid
     end
   end
   
+  def self.server_settings
+    @@server_settings
+  end
+  
+  def self.server_settings=(server_settings)
+    @@server_settings = server_settings
+  end
+  
   private
-  def login
+  def self.login
     @@service = SysaidApiService.new
 
     # see SOAP wiredumps (for debugging)
     @@service.wiredump_dev = STDERR
 
     # login
-    result = @@service.login({:accountId => @account, :userName => @username, :password => @password})
-    @@session_id = result.v_return
+    unless @@server_settings[:account].nil?
+      result = @@service.login({:accountId => @@server_settings[:account], :userName => @@server_settings[:username], :password => @@server_settings[:password]})
+      @@session_id = result.v_return
     
-    @@logged_in = true
+      @@logged_in = true
+    end
   end
 end
 
