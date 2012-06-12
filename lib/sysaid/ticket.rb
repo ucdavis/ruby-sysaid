@@ -1,8 +1,12 @@
 class SysAid::Ticket
   # Optionally takes an existing service_request from the SOAP driver
-  def initialize(service_handle, session_id, service_request = nil)
-    @service_handle = service_handle
-    @session_id = session_id
+  def initialize(service_request = nil)
+    if SysAid.logged_in? == false
+      raise "You must create a SysAid instance and log in before attempting to create a ticket."
+    end
+    
+    @service_handle = SysAid.service
+    @session_id = SysAid.session_id
     @sr = service_request
     
     if service_request.nil?
@@ -27,7 +31,7 @@ class SysAid::Ticket
     
     # Save it via the SOAP API
     result = @service_handle.save({:sessionId => @session_id, :apiSysObj => @sr})
-    if result.v_return == self.instance_variable_get(:@id).to_s
+    if result.v_return.to_i > 0
       return true
     else
       return false
