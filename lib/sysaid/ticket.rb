@@ -1,5 +1,12 @@
 class SysAid::Ticket
-  # Optionally takes an existing service_request from the SOAP driver
+  # Creates a SysAid::Ticket object
+  #
+  # Example:
+  #   >> SysAid::Ticket.new
+  #   => SysAid::Ticket
+  #
+  # Arguments:
+  #   service_request: (ApiServiceRequest object, optional)
   def initialize(service_request = nil)
     @sr = service_request
     
@@ -9,7 +16,12 @@ class SysAid::Ticket
     
     set_self_from_sr
   end
-  
+
+  # Saves a ticket back to the SysAid server
+  #
+  # Example:
+  #   >> ticket_object.save
+  #   => true
   def save
     if SysAid.logged_in? == false
       raise "You must create a SysAid instance and log in before attempting to create a ticket."
@@ -28,7 +40,12 @@ class SysAid::Ticket
       return false
     end
   end
-  
+
+  # Deletes a ticket from the SysAid server
+  #
+  # Example:
+  #   >> ticket_object.delete
+  #   => true  
   def delete
     unless @sr.instance_variable_get(:@id).nil?
       SysAid.service.delete({:sessionId => SysAid.session_id, :apiSysObj => @sr})

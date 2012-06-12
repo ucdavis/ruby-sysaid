@@ -1,3 +1,4 @@
+# The main SysAid class
 class SysAid
   @@logged_in = false
   @@server_settings = {}
@@ -11,6 +12,15 @@ class SysAid
     end
   end
 
+  # Find tickets by ID, responsibility, status, etc.
+  # Note: run_find_by_method is called from self.method_missing
+  #
+  # Example:
+  #   >> SysAid.find_by_id(34)
+  #   => hola mundo
+  #
+  # Arguments:
+  #   argument: (String or Integer)
   def self.run_find_by_method(attrs, *args, &block)
     # Make a key/value hash of attributes
     attrs = attrs.split('_and_')
@@ -44,15 +54,24 @@ class SysAid
     end
   end
   
+  # Accessor for internal SysaidApiService object.
+  # Used by SysAid::Ticket
   def self.service
     @@service
   end
-  
+
+  # Accessor for session ID returned by SysAid server.
+  # Used by SysAid::Ticket
   def self.session_id
     @@session_id
   end
   
+  # Returns true if logged into SysAid server
   # Note: By design, logged_in? will try to log in if it isn't already
+  #
+  # Example:
+  #   >> SysAid.logged_in?
+  #   => true
   def self.logged_in?
     if @@logged_in == false
       login
