@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
   s.files       = Dir["lib/sysaid.rb"] + Dir["lib/sysaid/ticket.rb"] + Dir["lib/sysaid/driver/*.rb"]
   s.homepage    =
     'https://github.com/cthielen/ruby-sysaid'
+  s.add_dependency('mumboe-soap4r', '>= 1.5.8.5')
 end
