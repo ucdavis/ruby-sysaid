@@ -33,6 +33,18 @@ Usage
     ticket.save
     puts ticket.id   # the ID of the new ticket
 
+Installation
+============
+(Tested with Ruby 1.9.x)
+
+    gem build ./sysaid.gemspec
+    gem install ./sysaid-*.gem
+
+(You may have to specify the specific version above, i.e. sysaid-0.1.0.gem.)
+
+Then, to use it in your scripts, merely:
+    require 'sysaid'
+
 Additional
 ==========
 If you'd like to debug the SOAP messages being sent back and forth, add
