@@ -29,7 +29,11 @@ class SysAid
       result = @@service.executeSelectQuery({:sessionId => @@session_id, :apiSysObj => sr, :condition => "#{conditions.keys[0]} = '#{conditions.values[0]}'"})
     end
     
-    SysAid::Ticket.new(result.v_return)
+    if result.instance_variables.include?(:@v_return)
+      return SysAid::Ticket.new(result.v_return)
+    else
+      return nil # ticket not found
+    end
   end
   
   def self.respond_to?(meth)
