@@ -38,7 +38,7 @@ class SysAid
       result = @service.executeSelectQuery({:sessionId => @session_id, :apiSysObj => sr, :condition => "#{conditions.keys[0]} = '#{conditions.values[0]}'"})
     end
     
-    SysAid::Ticket.new(result.v_return)
+    SysAid::Ticket.new(@service, @session_id, result.v_return)
   end
   
   def respond_to?(meth)
