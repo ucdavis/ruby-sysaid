@@ -43,6 +43,7 @@ Installation
 (You may have to specify the specific version above, i.e. sysaid-0.1.0.gem.)
 
 Then, to use it in your scripts, merely:
+
     require 'sysaid'
 
 Additional
