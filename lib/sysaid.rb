@@ -87,7 +87,7 @@ class SysAid
   
   private
   def self.login
-    @@service = SysaidApiService.new
+    @@service = SysaidApiService.new(@@server_settings[:endpoint])
 
     # see SOAP wiredumps (for debugging)
     @@service.wiredump_dev = STDERR

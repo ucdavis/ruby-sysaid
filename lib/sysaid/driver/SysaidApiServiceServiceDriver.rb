@@ -3,7 +3,7 @@ load 'sysaid/driver/SysaidApiServiceServiceMappingRegistry.rb'
 require 'soap/rpc/driver'
 
 class SysaidApiService < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://sysaid.dss.ucdavis.edu:443/services/SysaidApiService"
+  DefaultEndpointUrl = ""
 
   Methods = [
     [ "",
