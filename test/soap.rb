@@ -1,41 +1,34 @@
 #!/usr/bin/env ruby
 
-require 'sysaid'
+#require 'sysaid'
 
 # Fill this in with your SysAid instance's settings
-SysAid::Settings = {:endpoint => "", :accountId => "", :userName => "", :password => ""}
+#SysAid::Settings = {:endpoint => "", :accountId => "", :userName => "", :password => ""}
 
 # Login can be explicit but if you forget, the gem will login for you
-SysAid::Login
+#SysAid::Login
 
 # Fetch an arbitrary ticket, modify its title, and save it
-ticket = SysAid::Ticket.fetch_by_id(11550)
-ticket.title = "This is the new title"
-ticket.save
+#ticket = SysAid::Ticket.fetch_by_id(11550)
+#ticket.title = "This is the new title"
+#ticket.save
 
 # Make a new ticket
-ticket = SysAid::Ticket.new
-ticket.title = "This is a new ticket"
-ticket.save
+#ticket = SysAid::Ticket.new
+#ticket.title = "This is a new ticket"
+#ticket.save
 
 # Delete the ticket we just made
-ticket.delete
+#ticket.delete
 
 # Run a query to fetch a group of tickets
-tickets = SysAid::Ticket.fetch_by_responsibility("someone")
+#tickets = SysAid::Ticket.fetch_by_responsibility("someone")
 
 # Optional, but the SysAid API provides it
-SysAid::Logout
-
-# create a sysaid service instance
-#service = SysaidApiService.new
+#SysAid::Logout
 
 # see SOAP wiredumps (for debugging)
 #service.wiredump_dev = STDERR
-
-# login (works)
-#result = service.login({:accountId => "", :userName => "", :password => ""})
-#session_id = result.v_return
 
 #if(false)
   # find all of lloyd's tickets (works)
@@ -57,16 +50,6 @@ SysAid::Logout
   # save it
   #new_ticket_id = service.save({:sessionId => session_id, :apiSysObj => sr})
   #end
-
-# load a ticket by ID (works)
-#sr = ApiServiceRequest.new
-#result = service.loadByStringId({:sessionId => session_id, :apiSysObj => sr, :id => '11550'})
-
-# modify the ticket's details (works)
-#sr = result.v_return
-#sr.title = "No it is not222222"
-# ... and save it back
-#result = service.save({:sessionId => session_id, :apiSysObj => sr})
 
 # and delete that ticket (works)
 #result = service.delete({:sessionId => session_id, :apiSysObj => sr})

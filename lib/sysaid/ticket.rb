@@ -34,6 +34,16 @@ class SysAid::Ticket
     end
   end
   
+  def delete
+    unless @sr.instance_variable_get(:@id).nil?
+      @service_handle.delete({:sessionId => @session_id, :apiSysObj => @sr})
+      
+      return true
+    end
+    
+    false
+  end
+  
   # For dynamically creating attr_accessors
   # (from http://stackoverflow.com/questions/4082665/dynamically-create-class-attributes-with-attr-accessor)
   def create_method( name, &block )

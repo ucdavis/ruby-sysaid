@@ -7,6 +7,10 @@ class SysAid
     login
   end
   
+  def set_it
+    @@it = "whatever"
+  end
+  
   # Implements find_by_* methods, e.g. find_by_id, find_by_responsibility, etc.
   def method_missing(meth, *args, &block)
     if meth.to_s =~ /^find_by_(.+)$/
