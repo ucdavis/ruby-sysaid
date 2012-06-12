@@ -7,11 +7,22 @@ class SysAid::Ticket
       @sr = ApiServiceRequest.new
     end
     
-    # Create public variables for each field in the ticket
+    # Create public variables for each field in the ticket (and track them for later re-sync)
+    self.sr_variables = []
     @sr.instance_variables.each do |field|
+      self.sr_variables << field.to_s[1..-1]
       self.create_attr(field.to_s[1..-1])
       self.instance_variable_set(field, @sr.instance_variable_get(field.to_sym))
     end
+  end
+  
+  def save
+    # Save public variables back to the ApiServiceRequest (@sr) variable
+    
+    
+    # Save it via the SOAP API
+    
+    
   end
   
   # For dynamically creating attr_accessors
