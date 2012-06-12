@@ -1,14 +1,12 @@
 class SysAid
+  @@logged_in = false
+  
   def initialize(account, username, password)
     @account = account
     @username = username
     @password = password
     
     login
-  end
-  
-  def set_it
-    @@it = "whatever"
   end
   
   # Implements find_by_* methods, e.g. find_by_id, find_by_responsibility, etc.
@@ -37,12 +35,12 @@ class SysAid
     sr = ApiServiceRequest.new
     if conditions.keys[0] == "id"
       # ID requires we use loadById, not executeSelectQuery
-      result = @service.loadByStringId({:sessionId => @session_id, :apiSysObj => sr, :id => conditions.values[0]})
+      result = @@service.loadByStringId({:sessionId => @@session_id, :apiSysObj => sr, :id => conditions.values[0]})
     else
-      result = @service.executeSelectQuery({:sessionId => @session_id, :apiSysObj => sr, :condition => "#{conditions.keys[0]} = '#{conditions.values[0]}'"})
+      result = @@service.executeSelectQuery({:sessionId => @@session_id, :apiSysObj => sr, :condition => "#{conditions.keys[0]} = '#{conditions.values[0]}'"})
     end
     
-    SysAid::Ticket.new(@service, @session_id, result.v_return)
+    SysAid::Ticket.new(@@service, @@session_id, result.v_return)
   end
   
   def respond_to?(meth)
@@ -53,16 +51,34 @@ class SysAid
     end
   end
   
+  def self.service
+    @@service
+  end
+  
+  def self.session_id
+    @@session_id
+  end
+  
+  def self.logged_in?
+    if @@logged_in
+      return true
+    else
+      return false
+    end
+  end
+  
   private
   def login
-    @service = SysaidApiService.new
+    @@service = SysaidApiService.new
 
     # see SOAP wiredumps (for debugging)
-    @service.wiredump_dev = STDERR
+    @@service.wiredump_dev = STDERR
 
     # login
-    result = @service.login({:accountId => @account, :userName => @username, :password => @password})
-    @session_id = result.v_return
+    result = @@service.login({:accountId => @account, :userName => @username, :password => @password})
+    @@session_id = result.v_return
+    
+    @@logged_in = true
   end
 end
 
