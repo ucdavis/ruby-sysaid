@@ -57,26 +57,25 @@ If you'd like to use this gem with Rails, here is one way to do it:
       username: username
       password: password
 2. Create config/initializers/sysaid.rb with the following contents:
-    # Initializes SysAid based on settings in config/sysaid.yml
-    begin
-      sysaid_settings = YAML.load_file("#{Rails.root.to_s}/config/sysaid.yml")['sysaid']
+        begin
+          sysaid_settings = YAML.load_file("#{Rails.root.to_s}/config/sysaid.yml")['sysaid']
   
-      SysAid.server_settings = {
-        :endpoint => sysaid_settings['endpoint'],
-        :account => sysaid_settings['account'],
-        :username => sysaid_settings['username'],
-        :password => sysaid_settings['password']
-      }
+          SysAid.server_settings = {
+            :endpoint => sysaid_settings['endpoint'],
+            :account => sysaid_settings['account'],
+            :username => sysaid_settings['username'],
+            :password => sysaid_settings['password']
+          }
   
-      SYSAID_SUPPORT = true
+          SYSAID_SUPPORT = true
   
-      # Place any needed constants here, like the SysAid status table.
-      SYSAID_STATUS_NEW = 1
-      SYSAID_STATUS_CLOSED = 3
-    rescue Errno::ENOENT => e
-      logger.warn "config/sysaid.yml is missing. Disabling SysAid support."
-      SYSAID_SUPPORT = false
-    end
+          # Place any needed constants here, like the SysAid status table.
+          SYSAID_STATUS_NEW = 1
+          SYSAID_STATUS_CLOSED = 3
+        rescue Errno::ENOENT => e
+          logger.warn "config/sysaid.yml is missing. Disabling SysAid support."
+          SYSAID_SUPPORT = false
+        end
 3. Then, anywhere in your Rails application, you can use the gem:
     ticket = SysAid.find_by_id(params[:id])
 
