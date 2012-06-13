@@ -56,6 +56,7 @@ If you'd like to use this gem with Rails, here is one way to do it:
           account: account
           username: username
           password: password
+
 2. Create config/initializers/sysaid.rb with the following contents:
         begin
           sysaid_settings = YAML.load_file("#{Rails.root.to_s}/config/sysaid.yml")['sysaid']
@@ -76,8 +77,9 @@ If you'd like to use this gem with Rails, here is one way to do it:
           logger.warn "config/sysaid.yml is missing. Disabling SysAid support."
           SYSAID_SUPPORT = false
         end
+
 3. Then, anywhere in your Rails application, you can use the gem:
-    ticket = SysAid.find_by_id(params[:id])
+        ticket = SysAid.find_by_id(params[:id])
 
 Additional
 ==========
