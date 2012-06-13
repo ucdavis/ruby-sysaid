@@ -73,9 +73,12 @@ class SysAid
   #   >> SysAid.logged_in?
   #   => true
   def self.logged_in?
-    if @@logged_in == false
+    # Until official word comes from the company, we're going to login every time
+    # to avoid a problem with undetected timeouts
+    
+    #if @@logged_in == false
       login
-    end
+    #end
     
     if @@logged_in
       return true
