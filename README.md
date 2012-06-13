@@ -101,5 +101,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.1
+Version 0.1.1
 Last updated: Wednesday, June 13, 2012
