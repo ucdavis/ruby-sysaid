@@ -51,11 +51,11 @@ Rails Integration
 If you'd like to use this gem with Rails, here is one way to do it:
 
 1. Create config/sysaid.yml with the following contents:
-    sysaid:
-      endpoint: https://sysaid-server
-      account: account
-      username: username
-      password: password
+        sysaid:
+          endpoint: https://sysaid-server
+          account: account
+          username: username
+          password: password
 2. Create config/initializers/sysaid.rb with the following contents:
         begin
           sysaid_settings = YAML.load_file("#{Rails.root.to_s}/config/sysaid.yml")['sysaid']
