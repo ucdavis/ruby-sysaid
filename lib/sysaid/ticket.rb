@@ -1,96 +1,126 @@
 class SysAid::Ticket
-  # # Creates a SysAid::Ticket object
-  # #
-  # # Example:
-  # #   >> SysAid::Ticket.new
-  # #   => SysAid::Ticket
-  # #
-  # # Arguments:
-  # #   service_request: (ApiServiceRequest object, optional)
-  # def initialize(service_request = nil)
-  #   @sr = service_request
-  #   
-  #   if service_request.nil?
-  #     @sr = ApiServiceRequest.new
-  #   end
-  #   
-  #   set_self_from_sr
-  # end
-  # 
-  # # Saves a ticket back to the SysAid server
-  # #
-  # # Example:
-  # #   >> ticket_object.save
-  # #   => true
-  # def save
-  #   if SysAid.logged_in? == false
-  #     raise "You must create a SysAid instance and log in before attempting to create a ticket."
-  #   end
-  #   
-  #   # Save public variables back to the ApiServiceRequest (@sr) variable
-  #   set_sr_from_self
-  #   
-  #   # Save it via the SOAP API
-  #   result = SysAid.service.save({:sessionId => SysAid.session_id, :apiSysObj => @sr})
-  #   if result.v_return.to_i > 0
-  #     self.instance_variable_set(:@id, result.v_return.to_i)
-  #     @sr.instance_variable_set(:@id, result.v_return.to_i)
-  #     return true
-  #   else
-  #     return false
-  #   end
-  # end
-  # 
-  # # Deletes a ticket from the SysAid server
-  # #
-  # # Example:
-  # #   >> ticket_object.delete
-  # #   => true  
-  # def delete
-  #   unless @sr.instance_variable_get(:@id).nil?
-  #     SysAid.service.delete({:sessionId => SysAid.session_id, :apiSysObj => @sr})
-  #     
-  #     return true
-  #   end
-  #   
-  #   false
-  # end
-  # 
-  # # For dynamically creating attr_accessors
-  # # (from http://stackoverflow.com/questions/4082665/dynamically-create-class-attributes-with-attr-accessor)
-  # def create_method( name, &block )
-  #     self.class.send( :define_method, name, &block )
-  # end
-  # 
-  # def create_attr( name )
-  #     create_method( "#{name}=".to_sym ) { |val| 
-  #         instance_variable_set( "@" + name, val)
-  #     }
-  # 
-  #     create_method( name.to_sym ) { 
-  #         instance_variable_get( "@" + name ) 
-  #     }
-  # end
-  # 
-  # private
-  # # Note: We sync between @sr and our instance variables for API convenience, i.e.
-  # #       so one can say, ticket.title = "something" instead of
-  # #       ticket.instance_variable_get(:@sr).instance_variable_set(:@title, "something").
-  # 
-  # # Updates instance variables to match what is in @sr
-  # def set_self_from_sr
-  #   @sr_symbols = []
-  #   @sr.instance_variables.each do |field|
-  #     @sr_symbols << field
-  #     self.create_attr(field.to_s[1..-1])
-  #     self.instance_variable_set(field, @sr.instance_variable_get(field.to_sym))
-  #   end
-  # end
-  # 
-  # # Updates @sr to match what is in our instance variables
-  # def set_sr_from_self
-  #   @sr_symbols.each do |symbol|
-  #     @sr.instance_variable_set(symbol, self.instance_variable_get(symbol))
-  #   end
-  # end
+  attr_accessor :agreement, :assignCounter, :assignedTo, :CIId, :category, :currentSupportLevel, :custInt1, :custInt2, :custList1, :custList2, :description, :escalation, :id, :location, :maxSupportLevel, :parentLink, :priority, :projectID, :reopenCounter, :requestUser, :source, :srSubType, :srType, :status, :subCategory, :submitUser, :successRating, :taskID, :title, :urgency, :version
+  
+  def self.find_by_id(ticket_id)
+    ticket = SysAid::Ticket.new
+    
+    ticket.id = ticket_id
+    
+    return nil unless ticket.refresh
+    
+    return ticket
+  end
+  
+  # Loads the latest user information from the SysAid server
+  def refresh
+    response = SysAid.client.call(:load_by_string_id, message: to_xml )
+    
+    pp response.to_hash
+    
+    if response.to_hash[:load_by_string_id_response][:return]
+      set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
+      return true
+    end
+    
+    return false
+  end
+
+  # Saves a ticket back to the SysAid server
+  #
+  # Example:
+  #   >> ticket_object.save
+  #   => true
+  def save
+    if SysAid.logged_in? == false
+      raise "You must create a SysAid instance and log in before attempting to create or save a ticket."
+    end
+    
+    # Save it via the SOAP API
+    response = SysAid.client.call(:save, message: to_xml(false))
+    if response.to_hash[:save_response][:return]
+      return true
+    else
+      return false
+    end
+  end
+
+  # Deletes a ticket from the SysAid server
+  #
+  # Example:
+  #   >> ticket_object.delete
+  #   => true  
+  def delete
+    response = SysAid.client.call(:delete, message: to_xml(false))
+    
+    #response.to_hash[:delete_response]
+    # The SysAid API returns void on delete.
+    # No idea why.
+  end
+  
+  private
+  
+  def to_xml(include_id = true)
+    builder = Builder::XmlMarkup.new
+
+    builder.sessionId(SysAid.session_id)
+    builder.apiSysObj('xsi:type' => "tns:apiServiceRequest") { |b|
+      b.agreement(self.agreement)
+      b.assignCounter(self.assignCounter)
+      b.CIId(self.CIId)
+      b.currentSupportLevel(self.currentSupportLevel)
+      b.custInt1(self.custInt1)
+      b.custInt2(self.custInt2)
+      b.custList1(self.custList1)
+      b.custList2(self.custList2)
+      b.escalation(self.escalation)
+      b.id(self.id)
+      b.location(self.location)
+      b.maxSupportLevel(self.maxSupportLevel)
+      b.parentLink(self.parentLink)
+      b.priority(self.priority)
+      b.projectID(self.projectID)
+      b.reopenCounter(self.reopenCounter)
+      b.source(self.source)
+      b.srSubType(self.srSubType)
+      b.srType(self.srType)
+      b.status(self.status)
+      b.successRating(self.successRating)
+      b.taskID(self.taskID)
+      b.title(self.title)
+      b.urgency(self.urgency)
+      b.version(self.version)
+    }
+    builder.id(self.id) if include_id
+
+    builder.to_s
+  end
+  
+  # Update instance variables to match what is in response
+  def set_self_from_response(response)
+    self.agreement = response[:agreement]
+    self.assignCounter = response[:assignCounter]
+    self.CIId = response[:CIId]
+    self.currentSupportLevel = response[:currentSupportLevel]
+    self.custInt1 = response[:custInt1]
+    self.custInt2 = response[:custInt2]
+    self.custList1 = response[:custList1]
+    self.custList2 = response[:custList2]
+    self.escalation = response[:escalation]
+    self.id = response[:id]
+    self.location = response[:location]
+    self.maxSupportLevel = response[:maxSupportLevel]
+    self.parentLink = response[:parentLink]
+    self.priority = response[:priority]
+    self.projectID = response[:projectID]
+    self.reopenCounter = response[:reopenCounter]
+    self.source = response[:source]
+    self.srSubType = response[:srSubType]
+    self.srType = response[:srType]
+    self.status = response[:status]
+    self.successRating = response[:successRating]
+    self.taskID = response[:taskID]
+    self.title = response[:title]
+    self.urgency = response[:urgency]
+    self.version = response[:version]
+  end
 end

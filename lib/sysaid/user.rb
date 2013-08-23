@@ -16,13 +16,13 @@ class SysAid::User
   def self.find_by_username(username)
     user = SysAid::User.new(username)
     
-    user.refresh!
+    return nil unless user.refresh
     
     return user
   end
   
   # Loads the latest user information from the SysAid server
-  def refresh!
+  def refresh
     response = SysAid.client.call(:load_by_string_id, message: to_xml )
     if response.to_hash[:load_by_string_id_response][:return]
       set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
@@ -32,24 +32,23 @@ class SysAid::User
     return false
   end
 
-  # Saves a ticket back to the SysAid server
+  # Saves a user back to the SysAid server
   #
   # Example:
-  #   >> ticket_object.save
+  #   >> user_object.save
   #   => true
   def save
     if SysAid.logged_in? == false
-      raise "You must create a SysAid instance and log in before attempting to create a ticket."
+      raise "You must create a SysAid instance and log in before attempting to create or save a user."
     end
     
     # Save it via the SOAP API
     response = SysAid.client.call(:save, message: to_xml(false))
-    pp response
-    # if result.v_return.to_i > 0
-    #   return true
-    # else
-    #   return false
-    # end
+    if response.to_hash[:save_response][:return]
+      return true
+    else
+      return false
+    end
   end
 
   # Deletes a ticket from the SysAid server
@@ -60,9 +59,10 @@ class SysAid::User
   def delete
     response = SysAid.client.call(:delete, message: to_xml(false))
     
-    puts "22222"
-    pp response
-    puts "22222"
+    #response.to_hash[:delete_response]
+    
+    # The SysAid API doesn't return anything on delete.
+    # Think about that for a minute.
   end
   
   private
@@ -107,10 +107,6 @@ class SysAid::User
 
     builder.to_s
   end
-  
-  # Note: We sync between @sr and our instance variables for API convenience, i.e.
-  #       so one can say, ticket.title = "something" instead of
-  #       ticket.instance_variable_get(:@sr).instance_variable_set(:@title, "something").
   
   # Update instance variables to match what is in response
   def set_self_from_response(response)
