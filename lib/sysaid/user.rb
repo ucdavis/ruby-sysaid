@@ -1,5 +1,8 @@
 class SysAid::User
-  attr_accessor :username, :display_name, :email, :phone, :first_name, :last_name, :admin, :agreement, :building, :car_number, :cellphone, :company, :cubic, :custInt1, :custInt2, :custList1, :custList2, :custNotes, :custText1, :custText2, :department, :disable, :emailNotifications, :enableLoginToEup, :floor, :location, :manager, :notes, :sms, :userManagerName
+  attr_accessor :username, :display_name, :email, :phone, :first_name, :last_name, :admin, :agreement, :building,
+                :car_number, :cellphone, :company, :cubic, :custInt1, :custInt2, :custList1, :custList2, :custNotes,
+                :custText1, :custText2, :department, :disable, :emailNotifications, :enableLoginToEup, :floor, :location,
+                :manager, :notes, :sms, :userManagerName, :loginDomain, :loginUser, :secondaryEmail
   
   # Creates a SysAid::User object
   #
@@ -23,7 +26,7 @@ class SysAid::User
   
   # Loads the latest user information from the SysAid server
   def refresh
-    response = SysAid.client.call(:load_by_string_id, message: to_xml )
+    response = SysAid.client.call(:load_by_string_id, message: to_xml.to_s )
     if response.to_hash[:load_by_string_id_response][:return]
       set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
       return true
@@ -43,7 +46,7 @@ class SysAid::User
     end
     
     # Save it via the SOAP API
-    response = SysAid.client.call(:save, message: to_xml(false))
+    response = SysAid.client.call(:save, message: to_xml(false).to_s )
     if response.to_hash[:save_response][:return]
       return true
     else
@@ -57,7 +60,7 @@ class SysAid::User
   #   >> ticket_object.delete
   #   => true  
   def delete
-    response = SysAid.client.call(:delete, message: to_xml(false))
+    response = SysAid.client.call(:delete, message: to_xml(false).to_s )
     
     #response.to_hash[:delete_response]
     
@@ -72,40 +75,45 @@ class SysAid::User
 
     builder.sessionId(SysAid.session_id)
     builder.apiSysObj('xsi:type' => "tns:apiSysAidUser") { |b|
-      b.displayName(self.display_name)
-      b.userName(self.username)
-      b.email(self.email)
-      b.phone(self.phone)
-      b.firstName(self.first_name)
-      b.lastName(self.last_name)
-      b.admin(self.admin)
-      b.agreement(self.agreement)
-      b.building(self.building)
-      b.car_number(self.car_number)
-      b.cellphone(self.cellphone)
-      b.company(self.company)
-      b.cubic(self.cubic)
-      b.custInt1(self.custInt1)
-      b.custInt2(self.custInt2)
-      b.custList1(self.custList1)
-      b.custList2(self.custList2)
-      b.custNotes(self.custNotes)
-      b.custText1(self.custText1)
-      b.custText2(self.custText2)
-      b.department(self.department)
-      b.disable(self.disable)
-      b.emailNotifications(self.emailNotifications)
-      b.enableLoginToEup(self.enableLoginToEup)
-      b.floor(self.floor)
-      b.location(self.location)
-      b.manager(self.manager)
-      b.notes(self.notes)
-      b.sms(self.sms)
-      b.userManagerName(self.userManagerName)
+      b.admin(self.admin, 'xsi:type' => 'xsd:boolean')
+      b.agreement(self.agreement, 'xsi:type' => 'xsd:int')
+      b.building(self.building, 'xsi:type' => 'xsd:string')
+      b.carNumber(self.car_number, 'xsi:type' => 'xsd:string')
+      b.cellphone(self.cellphone, 'xsi:type' => 'xsd:string')
+      b.company(self.company, 'xsi:type' => 'xsd:int')
+      b.cubic(self.cubic, 'xsi:type' => 'xsd:string')
+      b.custInt1(self.custInt1, 'xsi:type' => 'xsd:int')
+      b.custInt2(self.custInt2, 'xsi:type' => 'xsd:int')
+      b.custList1(self.custList1, 'xsi:type' => 'xsd:int')
+      b.custList2(self.custList2, 'xsi:type' => 'xsd:int')
+      b.custNotes(self.custNotes, 'xsi:type' => 'xsd:string')
+      b.custText1(self.custText1, 'xsi:type' => 'xsd:string')
+      b.custText2(self.custText2, 'xsi:type' => 'xsd:string')
+      b.customDateFields
+      b.customFields
+      b.department(self.department, 'xsi:type' => 'xsd:int')
+      b.disable(self.disable, 'xsi:type' => 'xsd:boolean')
+      b.displayName(self.display_name, 'xsi:type' => 'xsd:string')
+      b.email(self.email, 'xsi:type' => 'xsd:string')
+      b.emailNotifications(self.emailNotifications, 'xsi:type' => 'xsd:boolean')
+      b.enableLoginToEup(self.enableLoginToEup, 'xsi:type' => 'xsd:boolean')
+      b.firstName(self.first_name, 'xsi:type' => 'xsd:string')
+      b.floor(self.floor, 'xsi:type' => 'xsd:string')
+      b.lastName(self.last_name, 'xsi:type' => 'xsd:string')
+      b.location(self.location, 'xsi:type' => 'xsd:int')
+      b.loginDomain(self.loginDomain, 'xsi:type' => 'xsd:string')
+      b.loginUser(self.loginUser, 'xsi:type' => 'xsd:string')
+      b.manager(self.manager, 'xsi:type' => 'xsd:boolean')
+      b.notes(self.notes, 'xsi:type' => 'xsd:string')
+      b.phone(self.phone, 'xsi:type' => 'xsd:string')
+      b.secondaryEmail(self.secondaryEmail, 'xsi:type' => 'xsd:string')
+      b.sms(self.sms, 'xsi:type' => 'xsd:string')
+      b.userManagerName(self.userManagerName, 'xsi:type' => 'xsd:string')      
+      b.userName(self.username, 'xsi:type' => 'xsd:string')
     }
     builder.id(self.username) if include_id
 
-    builder.to_s
+    builder
   end
   
   # Update instance variables to match what is in response
@@ -140,5 +148,8 @@ class SysAid::User
     self.notes = response[:notes]
     self.sms = response[:sms]
     self.userManagerName = response[:userManagerName]
+    self.loginDomain = response[:loginDomain]
+    self.loginUser = response[:loginUser]
+    self.secondaryEmail = response[:secondaryEmail]
   end
 end
