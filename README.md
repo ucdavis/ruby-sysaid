@@ -57,28 +57,22 @@ Installation
 ============
 (Tested with Ruby 2.0.x)
 
+Simply type:
+
+    gem install sysaid
+
+If you're using Bundler add:
+
+    gem 'sysaid'
+
+to your Gemfile.
+
+If you'd like to build the gem from source:
+
     gem build ./sysaid.gemspec
     gem install ./sysaid-*.gem
 
 (You may have to specify the specific version above, i.e. sysaid-0.1.0.gem.)
-
-Then, to use it in your scripts, merely:
-
-    require 'sysaid'
-    
-    # Update attribute on existing user
-    user = SysAid::User.find_by_username('cthielen')
-    user.display_name = "Christopher Thielen"
-    user.save
-    
-    # Create new user
-    user = SysAid::User.new
-    user.username = "cthielen"
-    user.save
-    
-    # Delete existing user
-    user = SysAid::User.find_by_username('cthielen')
-    user.delete
 
 Additional
 ==========
