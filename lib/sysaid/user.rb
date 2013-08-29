@@ -42,7 +42,7 @@ class SysAid::User
   #   => true
   def save
     if SysAid.logged_in? == false
-      raise "You must create a SysAid instance and log in before attempting to create or save a user."
+      raise "You must log in before creating or saving a user."
     end
     
     # Save it via the SOAP API
@@ -74,7 +74,7 @@ class SysAid::User
     builder = Builder::XmlMarkup.new
 
     builder.sessionId(SysAid.session_id)
-    builder.apiSysObj('xsi:type' => "tns:apiSysAidUser") { |b|
+    xml = builder.apiSysObj('xsi:type' => "tns:apiSysAidUser") { |b|
       b.admin(self.admin, 'xsi:type' => 'xsd:boolean')
       b.agreement(self.agreement, 'xsi:type' => 'xsd:int')
       b.building(self.building, 'xsi:type' => 'xsd:string')
@@ -111,9 +111,9 @@ class SysAid::User
       b.userManagerName(self.userManagerName, 'xsi:type' => 'xsd:string')      
       b.userName(self.username, 'xsi:type' => 'xsd:string')
     }
-    builder.id(self.username) if include_id
+    xml = builder.id(self.username) if include_id
 
-    builder
+    xml
   end
   
   # Update instance variables to match what is in response
