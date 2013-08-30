@@ -25,7 +25,7 @@ class SysAid::Ticket
     return ticket
   end
   
-  # Loads the latest user information from the SysAid server
+  # Loads the latest ticket information from the SysAid server
   def refresh
     response = SysAid.client.call(:load_by_string_id, message: to_xml)
     

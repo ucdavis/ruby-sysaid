@@ -54,18 +54,13 @@ class SysAid::User
     end
   end
 
-  # Deletes a ticket from the SysAid server
+  # Deletes a user from the SysAid server
   #
   # Example:
-  #   >> ticket_object.delete
-  #   => true  
+  #   >> user_object.delete
+  #   => nil  
   def delete
-    response = SysAid.client.call(:delete, message: to_xml(false).to_s )
-    
-    #response.to_hash[:delete_response]
-    
-    # The SysAid API doesn't return anything on delete.
-    # Think about that for a minute.
+    SysAid.client.call(:delete, message: to_xml(false).to_s )
   end
   
   private
