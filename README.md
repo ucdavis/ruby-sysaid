@@ -1,8 +1,8 @@
 Description
 ===========
 ruby-sysaid is a Ruby-based wrapper for the SysAid SOAP API. It abstracts
-the nonsense that is dealing with SOAP on Ruby and provides a clean interface
-for dealing with SysAid objects.
+the nonsense that is dealing with SOAP in Ruby and provides a clean interface
+for dealing with SysAid API objects.
 
 Usage
 =====
