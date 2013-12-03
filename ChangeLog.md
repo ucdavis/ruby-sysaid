@@ -1,3 +1,8 @@
+== Tuesday, December 3, 2013
+* Created two sample methods for using executeSelectQuery SOAP action to return arrays of object IDs.
+** SysAid::Task.find_by_project_id
+** SysAid::Project.find_by_query
+ 
 == Monday, December 2, 2013
 * Adding ability to manage projects
 

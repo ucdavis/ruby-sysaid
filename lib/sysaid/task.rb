@@ -21,10 +21,16 @@ class SysAid::Task
     return task
   end
 
-  def self.find_tasks_by_project_id(project_id)
-
+  def self.find_by_project_id(project_id)
+    response = SysAid.client.call(:execute_select_query, message: sql_query(project_id))
+    
+    if response.to_hash[:execute_select_query_response][:return]
+      return response.to_hash[:execute_select_query_response][:return]
+    end
+    
+    return false
   end
-  
+
   # Loads the latest task information from the SysAid server
   def refresh
     response = SysAid.client.call(:load_by_string_id, message: to_xml)
@@ -68,7 +74,16 @@ class SysAid::Task
   end
   
   private
-  
+
+  def self.sql_query(project_id)
+    builder = Builder::XmlMarkup.new
+
+    builder.sessionId(SysAid.session_id)
+    xml = builder.apiSysObj('xsi:type' => "tns:apiTask")
+    xml = builder.condition("project_id=#{project_id}")
+    xml
+  end
+
   def to_xml(include_id = true)
     builder = Builder::XmlMarkup.new
 

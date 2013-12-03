@@ -51,11 +51,37 @@ Usage
     # You could also have changed the user's name, e.g.
     # user.first_name = "Don't Delete"
     # user.save
+
+
+    # Find IDs of projects whose status = 2 (2 = Active)
+    projects = SysAid::Project.find_by_query("status=2")
+    
+    if projects
+      puts "== These projects are ACTIVE =="
+      projects.each do |proj_id|
+        project = SysAid::Project.find_by_id(proj_id)
+
+        puts project.title
+      end
+    end
+
+
+    # Find IDs of tasks whose project_id = 25
+    tasks = SysAid::Task.find_by_project_id(25)
+
+    if tasks
+      puts "== These tasks are in project 25 =="
+      tasks.each do |task_id|
+        task = SysAid::Tasks.find_by_id(task_id)
+
+        puts task.title
+      end
+    end
     
 
 Installation
 ============
-(Tested with Ruby 2.0.x)
+(Tested with Ruby 1.9.3 and 2.0.x)
 
 Simply type:
 
