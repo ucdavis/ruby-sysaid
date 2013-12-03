@@ -105,10 +105,6 @@ class SysAid::Project
   
   # Update instance variables to match what is in response
   def set_self_from_response(response)
-    pp "---"
-    pp response
-    pp "---"
-    
     self.assigned_group = response[:assign_group]
     self.category = response[:category]
     self.company = response[:company]

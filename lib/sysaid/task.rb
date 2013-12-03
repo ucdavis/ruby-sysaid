@@ -108,10 +108,6 @@ class SysAid::Task
   
   # Update instance variables to match what is in response
   def set_self_from_response(response)
-    pp "---"
-    pp response
-    pp "---"
-    
     self.category = response[:category]
     self.ciid = response[:ciid]
     #self.cust_date1 = response[:cust_date1]

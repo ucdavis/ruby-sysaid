@@ -136,10 +136,6 @@ class SysAid::Ticket
   
   # Update instance variables to match what is in response
   def set_self_from_response(response)
-    pp "---"
-    pp response
-    pp "---"
-    
     self.agreement = response[:agreement]
     self.archive = response[:archive]
     self.assign_counter = response[:assign_counter]
