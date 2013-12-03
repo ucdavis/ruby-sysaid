@@ -61,5 +61,7 @@ class SysAid
   end
 end
 
+require 'sysaid/project'
+require 'sysaid/task'
 require 'sysaid/ticket'
 require 'sysaid/user'
