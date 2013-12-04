@@ -20,6 +20,16 @@ class SysAid::Project
     
     return project
   end
+
+  def self.find_by_query(query)
+    response = SysAid.client.call(:execute_select_query, message: sql_query(query))
+    
+    if response.to_hash[:execute_select_query_response][:return]
+      return response.to_hash[:execute_select_query_response][:return]
+    end
+    
+    return false
+  end
   
   # Loads the latest project information from the SysAid server
   def refresh
@@ -65,6 +75,15 @@ class SysAid::Project
   
   private
   
+  def self.sql_query(query)
+    builder = Builder::XmlMarkup.new
+
+    builder.sessionId(SysAid.session_id)
+    xml = builder.apiSysObj('xsi:type' => "tns:apiProject")
+    xml = builder.condition(query)
+    xml
+  end
+
   def to_xml(include_id = true)
     builder = Builder::XmlMarkup.new
 
