@@ -36,6 +36,19 @@ class SysAid::Ticket
     
     return false
   end
+  
+  # Though the 'notes' field is merely an editable string, 'add_note'
+  # mimics the behavior of the SysAid web client.
+  def add_note(user, note, time = Time.now)
+    # NOTE: Notes are prepended.
+    new_note = "#{user} (#{time.strftime("%-m/%-d/%y %I:%M %p")}):\n   #{note}"
+    
+    if self.notes
+      self.notes = new_note + "\n=============================\n" + self.notes
+    else
+      self.notes = new_note
+    end
+  end
 
   # Saves a ticket back to the SysAid server
   #
@@ -145,7 +158,7 @@ class SysAid::Ticket
     self.category = response[:category]
     self.cc = response[:cc]
     self.change_category = response[:change_category]
-    self.close_time = response[:close_time]
+    self.close_time = response[:close_time] if response[:close_time]
     self.closure_information = response[:closure_information]
     self.computer_id = response[:computer_id]
     self.current_support_level = response[:current_support_level]
