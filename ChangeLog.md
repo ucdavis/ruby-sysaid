@@ -1,3 +1,7 @@
+== Friday, January 17, 2014
+* Added SysAid::Ticket.add_note() mimicking the SysAid web client behavior
+* Added SysAid.server_settings accessor
+
 == Tuesday, December 3, 2013
 * Created two sample methods for using executeSelectQuery SOAP action to return arrays of object IDs.
 ** SysAid::Task.find_by_project_id

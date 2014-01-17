@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'sysaid'
-  s.version     = '0.2.2'
-  s.date        = '2013-12-03'
+  s.version     = '0.2.3'
+  s.date        = '2014-01-17'
   s.summary     = "ruby-sysaid"
   s.description = "Wrapper for the SysAid SOAP API"
   s.authors     = ["Christopher Thielen"]
@@ -10,5 +10,5 @@ Gem::Specification.new do |s|
   s.files       = Dir["lib/sysaid.rb"] + Dir["lib/sysaid/*.rb"]
   s.homepage    =
     'https://github.com/cthielen/ruby-sysaid'
-  s.add_dependency('savon', '>= 2.3.0')
+  s.add_runtime_dependency 'savon', '~> 2.3', '>= 2.3.0'
 end

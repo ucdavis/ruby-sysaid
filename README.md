@@ -108,5 +108,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.2.1
-Last updated: Thursday, August 29, 2013
+Version 0.2.3
+Last updated: Friday, January 17, 2014
