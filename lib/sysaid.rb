@@ -17,6 +17,12 @@ class SysAid
     @@session_id
   end
   
+  # Accessor for server settings.
+  # Used by SysAid::Ticket
+  def self.server_settings
+    @@server_settings
+  end
+  
   # Returns true if logged into SysAid server
   # Note: By design, logged_in? will try to log in if it isn't already
   #
