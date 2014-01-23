@@ -77,6 +77,17 @@ Usage
         puts task.title
       end
     end
+
+
+    # Find all activities related to ticket ID 12345
+    activity_ids = SysAid::Activity.find_by_ticket_id("12345")
+    
+    if activity_ids
+      activity_ids.each do |activity_id|
+        activity = SysAid::Activity.find_by_id(activity_id)
+        puts activity.description
+      end
+    end
     
 
 Installation
