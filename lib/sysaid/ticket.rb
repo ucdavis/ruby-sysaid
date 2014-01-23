@@ -10,9 +10,63 @@ class SysAid::Ticket
                 :update_time, :update_user, :user_manager, :workaround, :insert_time, :followup_text, :email_account
   
   def initialize
+    reset_all_attributes
+  end
+  
+  # Needed by both initialize and delete (to empty out the object when deleted)
+  def reset_all_attributes
+    self.agreement = nil
+    self.archive = nil
+    self.assign_counter = nil
+    self.assigned_group = nil
+    self.assigned_to = nil
+    self.ciid = nil
+    self.category = nil
+    self.cc = nil
+    self.change_category = nil
     self.close_time = Date.new
+    self.closure_information = nil
+    self.computer_id = nil
+    self.current_support_level = nil
+    self.cust_int1 = nil
+    self.cust_int2 = nil
+    self.cust_list1 = nil
+    self.cust_list2 = nil
+    self.cust_notes = nil
+    self.cust_text1 = nil
+    self.cust_text2 = nil
+    self.description = nil
+    self.email_account = nil
+    self.escalation = nil
+    self.followup_text = nil
+    self.id = nil
+    self.impact = nil
     self.insert_time = Date.new
+    self.location = nil
+    self.max_support_level = nil
+    self.notes = nil
+    self.parent_link = nil
+    self.priority = nil
+    self.project_id = nil
+    self.reopen_counter = nil
+    self.request_user = nil
+    self.resolution = nil
+    self.solution = nil
+    self.source = nil
+    self.sr_sub_type = nil
+    self.sr_type = nil
+    self.status = nil
+    self.sub_category = nil
+    self.success_rating = nil
+    self.task_id = nil
+    self.third_level_category = nil
+    self.title = nil
     self.update_time = Date.new
+    self.update_user = nil
+    self.urgency = nil
+    self.user_manager = nil
+    self.version = nil
+    self.workaround = nil
   end
   
   def self.find_by_id(ticket_id)
@@ -63,6 +117,8 @@ class SysAid::Ticket
     # Save it via the SOAP API
     response = SysAid.client.call(:save, message: to_xml(false))
     if response.to_hash[:save_response][:return]
+      # In the case of a new ticket, the SysAid response will be the assigned ID
+      self.id = response.to_hash[:save_response][:return] unless self.id
       return true
     else
       return false
@@ -78,6 +134,8 @@ class SysAid::Ticket
   #   => true  
   def delete
     SysAid.client.call(:delete, message: to_xml(false))
+    
+    reset_all_attributes
   end
   
   private

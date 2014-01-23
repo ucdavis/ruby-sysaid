@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'sysaid'
-  s.version     = '0.2.3'
-  s.date        = '2014-01-17'
+  s.version     = '0.3.0'
+  s.date        = '2014-01-23'
   s.summary     = "ruby-sysaid"
   s.description = "Wrapper for the SysAid SOAP API"
   s.authors     = ["Christopher Thielen"]

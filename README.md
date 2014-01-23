@@ -81,7 +81,7 @@ Usage
 
 Installation
 ============
-(Tested with Ruby 1.9.3 and 2.0.x)
+(Tested with Ruby 1.9.3, 2.0.x, 2.1.x)
 
 Simply type:
 
@@ -108,5 +108,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.2.3
-Last updated: Friday, January 17, 2014
+Version 0.3.0
+Last updated: Thursday, January 23, 2014

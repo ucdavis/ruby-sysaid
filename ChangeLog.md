@@ -1,3 +1,10 @@
+== Thursday, January 23, 2014
+* Added SysAid::Activity
+* Clear Ticket objects when .delete() is called
+* Update Ticket ID when a new Ticket is created
+* Updated LICENSE with updated dates, acknowledge copyright of others (see AUTHORS)
+* Bumped version to 0.3.0
+
 == Friday, January 17, 2014
 * Added SysAid::Ticket.add_note() mimicking the SysAid web client behavior
 * Added SysAid.server_settings accessor
