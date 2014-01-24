@@ -1,8 +1,7 @@
 require 'date'
 
 class SysAid::Activity
-  attr_accessor :ciid, :cust_int1, :cust_int2, :cust_int3, :cust_int4, :cust_list1, :cust_list2, :description, :from_time,
-                :id, :sr_id, :to_time, :user
+  attr_accessor :ciid, :cust_int1, :cust_int2, :cust_int3, :cust_int4, :cust_list1, :cust_list2, :description, :from_time, :id, :sr_id, :to_time, :user
   
   def initialize
     reset_all_attributes
