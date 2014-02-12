@@ -26,13 +26,17 @@ class SysAid::User
   
   # Loads the latest user information from the SysAid server
   def refresh
-    response = SysAid.client.call(:load_by_string_id, message: to_xml.to_s )
-    if response.to_hash[:load_by_string_id_response][:return]
-      set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
-      return true
-    end
+    begin
+      response = SysAid.client.call(:load_by_string_id, message: to_xml.to_s )
+      if response.to_hash[:load_by_string_id_response][:return]
+        set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
+        return true
+      end
     
-    return false
+      return false
+    rescue SocketError => e
+      raise SysAidException, "Unable to fetch user information from SysAid server: #{e.message}"
+    end
   end
 
   # Saves a user back to the SysAid server

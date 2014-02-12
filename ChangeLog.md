@@ -1,3 +1,8 @@
+== Monday, February 10, 2014
+* Added SysAidException exception.
+* Use the above SysAidException for two network errors which have occurred in production.
+* Bumped version to 0.3.1
+
 == Thursday, January 23, 2014
 * Added SysAid::Activity
 * Clear Ticket objects when .delete() is called

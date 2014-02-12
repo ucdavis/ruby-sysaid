@@ -4,6 +4,27 @@ ruby-sysaid is a Ruby-based wrapper for the SysAid SOAP API. It abstracts
 the nonsense that is dealing with SOAP in Ruby and provides a clean interface
 for dealing with SysAid API objects.
 
+Installation
+============
+(Tested with Ruby 1.9.3, 2.0.x, 2.1.x)
+
+Simply type:
+
+    gem install sysaid
+
+If you're using Bundler add:
+
+    gem 'sysaid'
+
+to your Gemfile.
+
+If you'd like to build the gem from source:
+
+    gem build ./sysaid.gemspec
+    gem install ./sysaid-*.gem
+
+(You may have to specify the specific version above, i.e. sysaid-0.1.0.gem.)
+
 Usage
 =====
     
@@ -90,26 +111,17 @@ Usage
     end
     
 
-Installation
-============
-(Tested with Ruby 1.9.3, 2.0.x, 2.1.x)
+Error Handling
+==============
+ruby-sysaid will throw a SysAidException exception on any problems it catches.
 
-Simply type:
+It is recommended you wrap all your SysAid code with a check for this exception, e.g.
 
-    gem install sysaid
-
-If you're using Bundler add:
-
-    gem 'sysaid'
-
-to your Gemfile.
-
-If you'd like to build the gem from source:
-
-    gem build ./sysaid.gemspec
-    gem install ./sysaid-*.gem
-
-(You may have to specify the specific version above, i.e. sysaid-0.1.0.gem.)
+    begin
+        activity_ids = SysAid::Activity.find_by_ticket_id("12345")
+    rescue SysAidException => e
+        puts "SysAid error: #{e.message}"
+    end
 
 Additional
 ==========
@@ -119,5 +131,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.3.0
-Last updated: Thursday, January 23, 2014
+Version 0.3.1
+Last updated: Monday, February 10, 2014

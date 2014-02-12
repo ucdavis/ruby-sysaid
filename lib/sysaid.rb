@@ -1,5 +1,9 @@
 require 'savon'
 
+# Custom error class used for throwing exceptions to this gem's user
+class SysAidException < StandardError
+end
+
 # The main SysAid class
 class SysAid
   @@logged_in = false
@@ -52,17 +56,22 @@ class SysAid
       @@server_settings = { :account => account, :username => username, :password => password, :wsdl_uri => wsdl_uri, :debug => debug }
     end
     
-    @@client = Savon.client(wsdl: @@server_settings[:wsdl_uri], log: @@server_settings[:debug])
+    begin
+      @@client = Savon.client(wsdl: @@server_settings[:wsdl_uri], log: @@server_settings[:debug])
     
-    # login
-    unless @@server_settings[:account].nil?
-      # Call login
-      response = @@client.call(:login, message: { accountId: @@server_settings[:account], userName: @@server_settings[:username], password: @@server_settings[:password] })
+      # login
+      unless @@server_settings[:account].nil?
+        # Call login
+        response = @@client.call(:login, message: { accountId: @@server_settings[:account], userName: @@server_settings[:username], password: @@server_settings[:password] })
       
-      # Retrieve response
-      @@session_id = response.to_hash[:login_response][:return]
+        # Retrieve response
+        @@session_id = response.to_hash[:login_response][:return]
       
-      @@logged_in = true
+        @@logged_in = true
+      end
+    rescue Net::ReadTimeout => e
+      # This isn't the API timeout, this is a normal socket timeout error.
+      raise SysAidException, "Unable to log into SysAid server: #{e.message}"
     end
   end
 end
