@@ -81,6 +81,8 @@ class SysAid::Ticket
   
   # Loads the latest ticket information from the SysAid server
   def refresh
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:load_by_string_id, message: to_xml)
     
     if response.to_hash[:load_by_string_id_response][:return]
@@ -110,9 +112,7 @@ class SysAid::Ticket
   #   >> ticket_object.save
   #   => true
   def save
-    if SysAid.logged_in? == false
-      raise "You must log in before creating or saving a ticket."
-    end
+    SysAid.ensure_logged_in
     
     # Save it via the SOAP API
     response = SysAid.client.call(:save, message: to_xml(false))
@@ -133,6 +133,8 @@ class SysAid::Ticket
   #   >> ticket_object.delete
   #   => true  
   def delete
+    SysAid.ensure_logged_in
+    
     SysAid.client.call(:delete, message: to_xml(false))
     
     reset_all_attributes

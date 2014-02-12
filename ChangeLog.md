@@ -1,3 +1,8 @@
+== Tuesday, February 11, 2014
+* Added ability to set SysAid.server_settings instead of calling login (useful for Rails initializers)
+* Any function which uses Savon/SOAP will call SysAid.ensure_logged_in, which currently asserts a re-login
+* Bumped version to 0.3.2
+
 == Monday, February 10, 2014
 * Added SysAidException exception.
 * Use the above SysAidException for two network errors which have occurred in production.

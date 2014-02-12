@@ -22,6 +22,8 @@ class SysAid::Project
   end
 
   def self.find_by_query(query)
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:execute_select_query, message: sql_query(query))
     
     if response.to_hash[:execute_select_query_response][:return]
@@ -33,6 +35,8 @@ class SysAid::Project
   
   # Loads the latest project information from the SysAid server
   def refresh
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:load_by_string_id, message: to_xml)
     
     if response.to_hash[:load_by_string_id_response][:return]
@@ -49,9 +53,7 @@ class SysAid::Project
   #   >> project_object.save
   #   => true
   def save
-    if SysAid.logged_in? == false
-      raise "You must log in before creating or saving a project."
-    end
+    SysAid.ensure_logged_in
     
     # Save it via the SOAP API
     response = SysAid.client.call(:save, message: to_xml(false))
@@ -70,6 +72,7 @@ class SysAid::Project
   #   >> project_object.delete
   #   => true  
   def delete
+    SysAid.ensure_logged_in
     SysAid.client.call(:delete, message: to_xml(false))
   end
   
@@ -92,8 +95,6 @@ class SysAid::Project
       b.assignedGroup(self.assigned_group, 'xsi:type' => 'xsd:string')
       b.category(self.category, 'xsi:type' => 'xsd:int')
       b.company(self.company, 'xsi:type' => 'xsd:int')
-      #b.custDate1(self.cust_date1.rfc3339, 'xsi:type' => 'xsd:dateTime')
-      #b.custDate2(self.cust_date2.rfc3339, 'xsi:type' => 'xsd:dateTime')
       b.custInt1(self.cust_int1, 'xsi:type' => 'xsd:int')
       b.custInt2(self.cust_int2, 'xsi:type' => 'xsd:int')
       b.custList1(self.cust_list1, 'xsi:type' => 'xsd:int')
@@ -102,7 +103,6 @@ class SysAid::Project
       b.custText1(self.cust_text1, 'xsi:type' => 'xsd:string')
       b.custText2(self.cust_text2, 'xsi:type' => 'xsd:string')
       b.customDateFields
-      #b.customFields
       b.description(self.description, 'xsi:type' => 'xsd:string')
       b.endTime(self.end_time.rfc3339, 'xsi:type' => 'xsd:dateTime')
       b.id(self.id, 'xsi:type' => 'xsd:int')
@@ -127,8 +127,6 @@ class SysAid::Project
     self.assigned_group = response[:assign_group]
     self.category = response[:category]
     self.company = response[:company]
-    #self.cust_date1 = response[:cust_date1]
-    #self.cust_date2 = response[:cust_date2]
     self.cust_int1 = response[:cust_int1]
     self.cust_int2 = response[:cust_int2]
     self.cust_list1 = response[:cust_list1]

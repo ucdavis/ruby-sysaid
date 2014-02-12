@@ -131,5 +131,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.3.1
-Last updated: Monday, February 10, 2014
+Version 0.3.2
+Last updated: Monday, February 11, 2014

@@ -27,6 +27,8 @@ class SysAid::Activity
   # Returns an array of Activity IDs based on ticket_id.
   # Returns false on error.
   def self.find_by_ticket_id(ticket_id)
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:execute_select_query, message: sql_query(" service_req_id = #{ticket_id}"))
     
     if response.to_hash[:execute_select_query_response][:return]
@@ -49,6 +51,8 @@ class SysAid::Activity
   
   # Loads the latest ticket information from the SysAid server
   def refresh
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:load_by_string_id, message: to_xml)
     
     if response.to_hash[:load_by_string_id_response][:return]
@@ -65,9 +69,7 @@ class SysAid::Activity
   #   >> activity_object.save
   #   => true
   def save
-    if SysAid.logged_in? == false
-      raise "You must log in before creating or saving an activity."
-    end
+    SysAid.ensure_logged_in
     
     # Save it via the SOAP API
     response = SysAid.client.call(:save, message: to_xml(false))
@@ -88,6 +90,8 @@ class SysAid::Activity
   #   >> activity_object.delete
   #   => true
   def delete
+    SysAid.ensure_logged_in
+    
     SysAid.client.call(:delete, message: to_xml(false))
     
     reset_all_attributes

@@ -22,6 +22,8 @@ class SysAid::Task
   end
 
   def self.find_by_project_id(project_id)
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:execute_select_query, message: sql_query(project_id))
     
     if response.to_hash[:execute_select_query_response][:return]
@@ -33,6 +35,8 @@ class SysAid::Task
 
   # Loads the latest task information from the SysAid server
   def refresh
+    SysAid.ensure_logged_in
+    
     response = SysAid.client.call(:load_by_string_id, message: to_xml)
     
     if response.to_hash[:load_by_string_id_response][:return]
@@ -49,9 +53,7 @@ class SysAid::Task
   #   >> task_object.save
   #   => true
   def save
-    if SysAid.logged_in? == false
-      raise "You must log in before creating or saving a task."
-    end
+    SysAid.ensure_logged_in
     
     # Save it via the SOAP API
     response = SysAid.client.call(:save, message: to_xml(false))
@@ -70,6 +72,8 @@ class SysAid::Task
   #   >> task_object.delete
   #   => true  
   def delete
+    SysAid.ensure_logged_in
+    
     SysAid.client.call(:delete, message: to_xml(false))
   end
   
