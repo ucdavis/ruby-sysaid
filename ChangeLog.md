@@ -1,3 +1,7 @@
+== Monday, June 20, 2014
+* Catch additional SOAP/network exceptions and re-issue as SysAidException
+* Bumped version to 0.3.3
+
 == Tuesday, February 11, 2014
 * Added ability to set SysAid.server_settings instead of calling login (useful for Rails initializers)
 * Any function which uses Savon/SOAP will call SysAid.ensure_logged_in, which currently asserts a re-login
@@ -23,7 +27,7 @@
 * Created two sample methods for using executeSelectQuery SOAP action to return arrays of object IDs.
 ** SysAid::Task.find_by_project_id
 ** SysAid::Project.find_by_query
- 
+
 == Monday, December 2, 2013
 * Adding ability to manage projects
 

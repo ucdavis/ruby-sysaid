@@ -3,7 +3,7 @@ class SysAid::User
                 :car_number, :cellphone, :company, :cubic, :cust_int1, :cust_int2, :cust_list1, :cust_list2, :cust_notes,
                 :cust_text1, :cust_text2, :department, :disable, :email_notifications, :enable_login_to_eup, :floor, :location,
                 :manager, :notes, :sms, :user_manager_name, :login_domain, :login_user, :secondary_email
-  
+
   # Creates a SysAid::User object
   #
   # Example:
@@ -15,29 +15,31 @@ class SysAid::User
   def initialize(username = nil)
     self.username = username
   end
-  
+
   def self.find_by_username(username)
     user = SysAid::User.new(username)
-    
+
     return nil unless user.refresh
-    
+
     return user
   end
-  
+
   # Loads the latest user information from the SysAid server
   def refresh
     begin
       SysAid.ensure_logged_in
-      
+
       response = SysAid.client.call(:load_by_string_id, message: to_xml.to_s )
       if response.to_hash[:load_by_string_id_response][:return]
         set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
         return true
       end
-    
+
       return false
     rescue SocketError => e
       raise SysAidException, "Unable to fetch user information from SysAid server: #{e.message}"
+    rescue Errno::EHOSTUNREACH => e
+      raise SysAidException, "Unable to reach SysAid server, host unreachable: #{e.message}"
     end
   end
 
@@ -48,13 +50,17 @@ class SysAid::User
   #   => true
   def save
     SysAid.ensure_logged_in
-    
-    # Save it via the SOAP API
-    response = SysAid.client.call(:save, message: to_xml(false).to_s )
-    if response.to_hash[:save_response][:return]
-      return true
-    else
-      return false
+
+    begin
+      # Save it via the SOAP API
+      response = SysAid.client.call(:save, message: to_xml(false).to_s )
+      if response.to_hash[:save_response][:return]
+        return true
+      else
+        return false
+      end
+    rescue Savon::SOAPFault => e
+      raise SysAidException, "Unable to save user due to SOAP communications error: #{e.message}"
     end
   end
 
@@ -62,15 +68,15 @@ class SysAid::User
   #
   # Example:
   #   >> user_object.delete
-  #   => nil  
+  #   => nil
   def delete
     SysAid.ensure_logged_in
-    
+
     SysAid.client.call(:delete, message: to_xml(false).to_s )
   end
-  
+
   private
-  
+
   def to_xml(include_id = true)
     builder = Builder::XmlMarkup.new
 
@@ -109,14 +115,14 @@ class SysAid::User
       b.phone(self.phone, 'xsi:type' => 'xsd:string')
       b.secondaryEmail(self.secondary_email, 'xsi:type' => 'xsd:string')
       b.sms(self.sms, 'xsi:type' => 'xsd:string')
-      b.userManagerName(self.user_manager_name, 'xsi:type' => 'xsd:string')      
+      b.userManagerName(self.user_manager_name, 'xsi:type' => 'xsd:string')
       b.userName(self.username, 'xsi:type' => 'xsd:string')
     }
     xml = builder.id(self.username) if include_id
 
     xml
   end
-  
+
   # Update instance variables to match what is in response
   def set_self_from_response(response)
     self.username = response[:user_name]
