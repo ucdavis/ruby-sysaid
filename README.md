@@ -27,19 +27,19 @@ If you'd like to build the gem from source:
 
 Usage
 =====
-    
+
     require 'sysaid'
-    
+
     SysAid::login "account", "username", "password", "wsdl_uri"
-    
+
     # Find a ticket by ID and change its title
-    
+
     ticket = SysAid::Ticket.find_by_id(123456)
     if ticket
       puts "Ticket found. Title is: #{ticket.title}"
-      
+
       ticket.title = "My title has changed."
-      
+
       if ticket.save
         puts "Ticket saved successfully."
       else
@@ -48,15 +48,15 @@ Usage
     else
       puts "Could not find ticket."
     end
-    
-    
-    
+
+
+
     # Create user 'deleteme' if he doesn't exist, delete him if he does
-    
+
     user = SysAid::User.find_by_username('deleteme')
     unless user
       puts "Could not find user 'deleteme'. Creating..."
-      
+
       user = SysAid::User.new('deleteme')
       if user.save
         puts "User saved successfully"
@@ -65,10 +65,10 @@ Usage
       end
     else
       puts "User 'deleteme' found. Deleting."
-      
+
       user.delete
     end
-    
+
     # You could also have changed the user's name, e.g.
     # user.first_name = "Don't Delete"
     # user.save
@@ -76,7 +76,7 @@ Usage
 
     # Find IDs of projects whose status = 2 (2 = Active)
     projects = SysAid::Project.find_by_query("status=2")
-    
+
     if projects
       puts "== These projects are ACTIVE =="
       projects.each do |proj_id|
@@ -102,14 +102,14 @@ Usage
 
     # Find all activities related to ticket ID 12345
     activity_ids = SysAid::Activity.find_by_ticket_id("12345")
-    
+
     if activity_ids
       activity_ids.each do |activity_id|
         activity = SysAid::Activity.find_by_id(activity_id)
         puts activity.description
       end
     end
-    
+
 
 Error Handling
 ==============
@@ -131,5 +131,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.3.2
-Last updated: Monday, February 11, 2014
+Version 0.3.4
+Last updated: Wednesday, July 2, 2014

@@ -3,47 +3,47 @@ require 'date'
 class SysAid::Project
   attr_accessor :assigned_group, :category, :company, :cust_date1, :cust_date2, :cust_int1, :cust_int2, :cust_list1,
                 :cust_list2, :cust_notes, :custom_date_fields, :custom_fields, :cust_text1, :cust_text2, :description,
-                :end_time, :id, :incident_title, :manager, :notes, :progress, :raw_estimation, :request_group, 
+                :end_time, :id, :incident_title, :manager, :notes, :progress, :raw_estimation, :request_group,
                 :start_time, :status, :title, :version
-  
+
   def initialize
     self.start_time = Date.new
     self.end_time = Date.new
   end
-  
+
   def self.find_by_id(project_id)
     project = SysAid::Project.new
-    
+
     project.id = project_id
-    
+
     return nil unless project.refresh
-    
+
     return project
   end
 
   def self.find_by_query(query)
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:execute_select_query, message: sql_query(query))
-    
+
+    response = SysAid.call(:execute_select_query, message: sql_query(query))
+
     if response.to_hash[:execute_select_query_response][:return]
       return response.to_hash[:execute_select_query_response][:return]
     end
-    
+
     return false
   end
-  
+
   # Loads the latest project information from the SysAid server
   def refresh
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:load_by_string_id, message: to_xml)
-    
+
+    response = SysAid.call(:load_by_string_id, message: to_xml)
+
     if response.to_hash[:load_by_string_id_response][:return]
       set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
       return true
     end
-    
+
     return false
   end
 
@@ -54,9 +54,9 @@ class SysAid::Project
   #   => true
   def save
     SysAid.ensure_logged_in
-    
+
     # Save it via the SOAP API
-    response = SysAid.client.call(:save, message: to_xml(false))
+    response = SysAid.call(:save, message: to_xml(false))
     if response.to_hash[:save_response][:return]
       return true
     else
@@ -70,14 +70,14 @@ class SysAid::Project
   #
   # Example:
   #   >> project_object.delete
-  #   => true  
+  #   => true
   def delete
     SysAid.ensure_logged_in
-    SysAid.client.call(:delete, message: to_xml(false))
+    SysAid.call(:delete, message: to_xml(false))
   end
-  
+
   private
-  
+
   def self.sql_query(query)
     builder = Builder::XmlMarkup.new
 
@@ -121,7 +121,7 @@ class SysAid::Project
 
     xml
   end
-  
+
   # Update instance variables to match what is in response
   def set_self_from_response(response)
     self.assigned_group = response[:assign_group]

@@ -1,3 +1,8 @@
+== Wednesday, July 2, 2014
+* Refactored SOAP client calls to proxy through a single function in order to catch
+  the various network and SOAP exceptions which may occur. They are transformed into
+  a single SysAidException which any code using this gem should use.
+
 == Monday, June 20, 2014
 * Catch additional SOAP/network exceptions and re-issue as SysAidException
 * Bumped version to 0.3.3

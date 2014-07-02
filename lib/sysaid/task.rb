@@ -5,45 +5,45 @@ class SysAid::Task
                 :cust_notes, :custom_date_fields, :custom_fields, :cust_text1, :cust_text2, :description,
                 :end_time, :estimation, :id, :notes, :progress, :project_id, :start_time, :status,
                 :task_dependency, :task_dependency_type, :title, :version
-  
+
   def initialize
     self.start_time = Date.new
     self.end_time = Date.new
   end
-  
+
   def self.find_by_id(task_id)
     task = SysAid::Task.new
-    
+
     task.id = task_id
-    
+
     return nil unless task.refresh
-    
+
     return task
   end
 
   def self.find_by_project_id(project_id)
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:execute_select_query, message: sql_query(project_id))
-    
+
+    response = SysAid.call(:execute_select_query, message: sql_query(project_id))
+
     if response.to_hash[:execute_select_query_response][:return]
       return response.to_hash[:execute_select_query_response][:return]
     end
-    
+
     return false
   end
 
   # Loads the latest task information from the SysAid server
   def refresh
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:load_by_string_id, message: to_xml)
-    
+
+    response = SysAid.call(:load_by_string_id, message: to_xml)
+
     if response.to_hash[:load_by_string_id_response][:return]
       set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
       return true
     end
-    
+
     return false
   end
 
@@ -54,9 +54,9 @@ class SysAid::Task
   #   => true
   def save
     SysAid.ensure_logged_in
-    
+
     # Save it via the SOAP API
-    response = SysAid.client.call(:save, message: to_xml(false))
+    response = SysAid.call(:save, message: to_xml(false))
     if response.to_hash[:save_response][:return]
       return true
     else
@@ -70,13 +70,13 @@ class SysAid::Task
   #
   # Example:
   #   >> task_object.delete
-  #   => true  
+  #   => true
   def delete
     SysAid.ensure_logged_in
     
-    SysAid.client.call(:delete, message: to_xml(false))
+    SysAid.call(:delete, message: to_xml(false))
   end
-  
+
   private
 
   def self.sql_query(project_id)
@@ -124,7 +124,7 @@ class SysAid::Task
 
     xml
   end
-  
+
   # Update instance variables to match what is in response
   def set_self_from_response(response)
     self.category = response[:category]

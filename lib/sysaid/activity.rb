@@ -2,11 +2,11 @@ require 'date'
 
 class SysAid::Activity
   attr_accessor :ciid, :cust_int1, :cust_int2, :cust_int3, :cust_int4, :cust_list1, :cust_list2, :description, :from_time, :id, :sr_id, :to_time, :user
-  
+
   def initialize
     reset_all_attributes
   end
-  
+
   # Needed by both initialize and delete (to empty out the object when deleted)
   def reset_all_attributes
     self.ciid = nil
@@ -23,46 +23,46 @@ class SysAid::Activity
     self.to_time = Date.new
     self.user = nil
   end
-  
+
   # Returns an array of Activity IDs based on ticket_id.
   # Returns false on error.
   def self.find_by_ticket_id(ticket_id)
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:execute_select_query, message: sql_query(" service_req_id = #{ticket_id}"))
-    
+
+    response = SysAid.call(:execute_select_query, message: sql_query(" service_req_id = #{ticket_id}"))
+
     if response.to_hash[:execute_select_query_response][:return]
       return response.to_hash[:execute_select_query_response][:return]
     end
-    
+
     return false
   end
-  
+
   # Returns a specific Activity based on an Activity ID
   def self.find_by_id(activity_id)
     activity = SysAid::Activity.new
-    
+
     activity.id = activity_id
-    
+
     return nil unless activity.refresh
-    
+
     return activity
   end
-  
+
   # Loads the latest ticket information from the SysAid server
   def refresh
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:load_by_string_id, message: to_xml)
-    
+
+    response = SysAid.call(:load_by_string_id, message: to_xml)
+
     if response.to_hash[:load_by_string_id_response][:return]
       set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
       return true
     end
-    
+
     return false
   end
-  
+
   # Saves an activity back to the SysAid server
   #
   # Example:
@@ -70,9 +70,9 @@ class SysAid::Activity
   #   => true
   def save
     SysAid.ensure_logged_in
-    
+
     # Save it via the SOAP API
-    response = SysAid.client.call(:save, message: to_xml(false))
+    response = SysAid.call(:save, message: to_xml(false))
     if response.to_hash[:save_response][:return]
       # In the case of new activities, the SysAid response will be the assigned ID
       self.id = response.to_hash[:save_response][:return] unless self.id
@@ -92,13 +92,13 @@ class SysAid::Activity
   def delete
     SysAid.ensure_logged_in
     
-    SysAid.client.call(:delete, message: to_xml(false))
-    
+    SysAid.call(:delete, message: to_xml(false))
+
     reset_all_attributes
   end
-  
+
   private
-  
+
   def self.sql_query(query)
     builder = Builder::XmlMarkup.new
 
@@ -107,10 +107,10 @@ class SysAid::Activity
     xml = builder.condition(query)
     xml
   end
-  
+
   def to_xml(include_id = true)
     builder = Builder::XmlMarkup.new
-    
+
     builder.sessionId(SysAid.session_id)
     xml = builder.apiSysObj('xsi:type' => "tns:apiServiceRequestActivity") { |b|
       b.CIId(self.ciid, 'xsi:type' => 'xsd:int')
@@ -131,7 +131,7 @@ class SysAid::Activity
 
     xml
   end
-  
+
   # Update instance variables to match what is in response
   def set_self_from_response(response)
     self.ciid = response[:ci_id]

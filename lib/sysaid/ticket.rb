@@ -8,11 +8,11 @@ class SysAid::Ticket
                 :assigned_group, :cc, :change_category, :close_time, :closure_information, :computer_id,
                 :cust_notes, :cust_text1, :cust_text2, :impact, :notes, :resolution, :solution, :third_level_category,
                 :update_time, :update_user, :user_manager, :workaround, :insert_time, :followup_text, :email_account
-  
+
   def initialize
     reset_all_attributes
   end
-  
+
   # Needed by both initialize and delete (to empty out the object when deleted)
   def reset_all_attributes
     self.agreement = nil
@@ -68,37 +68,37 @@ class SysAid::Ticket
     self.version = nil
     self.workaround = nil
   end
-  
+
   def self.find_by_id(ticket_id)
     ticket = SysAid::Ticket.new
-    
+
     ticket.id = ticket_id
-    
+
     return nil unless ticket.refresh
-    
+
     return ticket
   end
-  
+
   # Loads the latest ticket information from the SysAid server
   def refresh
     SysAid.ensure_logged_in
-    
-    response = SysAid.client.call(:load_by_string_id, message: to_xml)
-    
+
+    response = SysAid.call(:load_by_string_id, message: to_xml)
+
     if response.to_hash[:load_by_string_id_response][:return]
       set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
       return true
     end
-    
+
     return false
   end
-  
+
   # Though the 'notes' field is merely an editable string, 'add_note'
   # mimics the behavior of the SysAid web client.
   def add_note(user, note, time = Time.now)
     # NOTE: Notes are prepended.
     new_note = "#{user} (#{time.strftime("%-m/%-d/%y %I:%M %p")}):\n   #{note}"
-    
+
     if self.notes
       self.notes = new_note + "\n=============================\n" + self.notes
     else
@@ -113,9 +113,9 @@ class SysAid::Ticket
   #   => true
   def save
     SysAid.ensure_logged_in
-    
+
     # Save it via the SOAP API
-    response = SysAid.client.call(:save, message: to_xml(false))
+    response = SysAid.call(:save, message: to_xml(false))
     if response.to_hash[:save_response][:return]
       # In the case of a new ticket, the SysAid response will be the assigned ID
       self.id = response.to_hash[:save_response][:return] unless self.id
@@ -131,17 +131,17 @@ class SysAid::Ticket
   #
   # Example:
   #   >> ticket_object.delete
-  #   => true  
+  #   => true
   def delete
     SysAid.ensure_logged_in
     
-    SysAid.client.call(:delete, message: to_xml(false))
-    
+    SysAid.call(:delete, message: to_xml(false))
+
     reset_all_attributes
   end
-  
+
   private
-  
+
   def to_xml(include_id = true)
     builder = Builder::XmlMarkup.new
 
@@ -206,7 +206,7 @@ class SysAid::Ticket
 
     xml
   end
-  
+
   # Update instance variables to match what is in response
   def set_self_from_response(response)
     self.agreement = response[:agreement]

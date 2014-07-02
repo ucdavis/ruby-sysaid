@@ -26,21 +26,15 @@ class SysAid::User
 
   # Loads the latest user information from the SysAid server
   def refresh
-    begin
-      SysAid.ensure_logged_in
+    SysAid.ensure_logged_in
 
-      response = SysAid.client.call(:load_by_string_id, message: to_xml.to_s )
-      if response.to_hash[:load_by_string_id_response][:return]
-        set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
-        return true
-      end
-
-      return false
-    rescue SocketError => e
-      raise SysAidException, "Unable to fetch user information from SysAid server: #{e.message}"
-    rescue Errno::EHOSTUNREACH => e
-      raise SysAidException, "Unable to reach SysAid server, host unreachable: #{e.message}"
+    response = SysAid.call(:load_by_string_id, message: to_xml.to_s )
+    if response.to_hash[:load_by_string_id_response][:return]
+      set_self_from_response(response.to_hash[:load_by_string_id_response][:return])
+      return true
     end
+
+    return false
   end
 
   # Saves a user back to the SysAid server
@@ -51,16 +45,12 @@ class SysAid::User
   def save
     SysAid.ensure_logged_in
 
-    begin
-      # Save it via the SOAP API
-      response = SysAid.client.call(:save, message: to_xml(false).to_s )
-      if response.to_hash[:save_response][:return]
-        return true
-      else
-        return false
-      end
-    rescue Savon::SOAPFault => e
-      raise SysAidException, "Unable to save user due to SOAP communications error: #{e.message}"
+    # Save it via the SOAP API
+    response = SysAid.call(:save, message: to_xml(false).to_s )
+    if response.to_hash[:save_response][:return]
+      return true
+    else
+      return false
     end
   end
 
@@ -72,7 +62,7 @@ class SysAid::User
   def delete
     SysAid.ensure_logged_in
 
-    SysAid.client.call(:delete, message: to_xml(false).to_s )
+    SysAid.call(:delete, message: to_xml(false).to_s )
   end
 
   private
