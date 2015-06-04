@@ -14,6 +14,7 @@ class SysAid::User
   #   username: (SysAid username, optional)
   def initialize(username = nil)
     self.username = username
+    self.email_notifications = true
   end
 
   def self.find_by_username(username)
