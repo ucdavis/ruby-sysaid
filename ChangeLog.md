@@ -1,3 +1,6 @@
+== Thursday, June 4, 2015
+* New users default to YES for email_notifications
+
 == Wednesday, July 2, 2014
 * Refactored SOAP client calls to proxy through a single function in order to catch
   the various network and SOAP exceptions which may occur. They are transformed into
