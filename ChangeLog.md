@@ -1,3 +1,7 @@
+== Monday, January 11, 2016
+* Added SysAid::Ticket.find_by_query() for querying ApiServiceRequest items
+  using the SOAP executeSelectQuery() method.
+
 == Thursday, June 4, 2015
 * New users default to YES for email_notifications
 

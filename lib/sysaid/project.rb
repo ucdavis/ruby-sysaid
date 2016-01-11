@@ -84,6 +84,7 @@ class SysAid::Project
     builder.sessionId(SysAid.session_id)
     xml = builder.apiSysObj('xsi:type' => "tns:apiProject")
     xml = builder.condition(query)
+    
     xml
   end
 

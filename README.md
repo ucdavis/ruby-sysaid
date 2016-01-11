@@ -50,6 +50,16 @@ Usage
     end
 
 
+    # Find all tickets by a status
+
+    tickets = SysAid::Ticket.find_by_query("status IN (1, 2, 3)")
+    if tickets
+      puts "Found #{tickets.length} tickets."
+    else
+      puts "Could not find any tickets."
+    end
+
+
 
     # Create user 'deleteme' if he doesn't exist, delete him if he does
 
@@ -131,5 +141,5 @@ Written by Christopher Thielen for the University of California Davis.
 
 Available under the MIT license.
 
-Version 0.3.4
-Last updated: Wednesday, July 2, 2014
+Version 0.3.5
+Last updated: Monday, January 11, 2016
