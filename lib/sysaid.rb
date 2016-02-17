@@ -22,11 +22,13 @@ class SysAid
     begin
       return @@client.call(method, message)
     rescue SocketError => e
-        raise SysAidException, "Unable to fetch user information from SysAid server: #{e.message}"
+        raise SysAidException, "Socket error communicating with SysAid: #{e.message}"
     rescue Errno::EHOSTUNREACH => e
-      raise SysAidException, "Unable to save user due to server being unreachable: #{e.message}"
+      raise SysAidException, "Server unreachable error communicating with SysAid: #{e.message}"
     rescue Savon::SOAPFault => e
-      raise SysAidException, "Unable to save user due to SOAP communications error: #{e.message}"
+      raise SysAidException, "SOAP error communicating with SysAid: #{e.message}"
+    rescue Net::ReadTimeout => e
+      raise SysAidException, "Network timeout communicating with SysAid: #{e.message}"
     end
   end
 

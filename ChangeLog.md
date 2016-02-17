@@ -1,3 +1,6 @@
+== Wednesday, February 17, 2016
+* Added catch for network timeout errors in SysAid.call()
+
 == Monday, January 11, 2016
 * Added SysAid::Ticket.find_by_query() for querying ApiServiceRequest items
   using the SOAP executeSelectQuery() method.
